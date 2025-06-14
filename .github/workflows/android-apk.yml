@@ -1,80 +1,41 @@
-name: Android APK Build
+name: Build Android APK
+
 on:
   push:
-    branches: [ main, master ]
+    paths:
+      - 'android/**'
   pull_request:
-    branches: [ main, master ]
+    paths:
+      - 'android/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Setup Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-        
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Create .env file
-      run: |
-        echo "VITE_SUPABASE_URL=your_supabase_url_here" > .env
-        echo "VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here" >> .env
-      
-    - name: Build web application
-      run: npm run build
-      
-    - name: Sync Capacitor
-      run: npx cap sync android
-      
-    - name: Grant execute permission for gradlew
-      run: chmod +x android/gradlew
-      
-    - name: Build Debug APK
-      run: |
-        cd android
-        ./gradlew assembleDebug --stacktrace
-        
-    - name: Build Release APK
-      run: |
-        cd android
-        ./gradlew assembleRelease --stacktrace
-        
-    - name: Upload Debug APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug
-        path: android/app/build/outputs/apk/debug/app-debug.apk
-        
-    - name: Upload Release APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-release
-        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
-        
-    - name: Create Release
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
-        files: |
-          android/app/build/outputs/apk/debug/app-debug.apk
-          android/app/build/outputs/apk/release/app-release-unsigned.apk
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Kodu Checkout Et
+        uses: actions/checkout@v4
+
+      - name: Java Kurulumu
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: APK Build Et
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: APK'yı Yükle (Artifact olarak)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
