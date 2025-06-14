@@ -1,0 +1,11 @@
+ext {
+  cdvMinSdkVersion = 22
+  cdvCompileSdkVersion = 34
+  cdvTargetSdkVersion = 34
+  cdvVersionCode = 1
+  cdvVersionCodeTime = 1640995200000
+  cdvBuildToolsVersion = '30.0.3'
+  cdvAndroidXAppCompatVersion = '1.4.2'
+  cdvAndroidXCoreVersion = '1.8.0'
+  cdvAndroidXFragmentVersion = '1.4.1'
+}

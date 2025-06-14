@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Dr. Eren Sağıroğlu Randevu</string>
+    <string name="title_activity_main">Dr. Eren Sağıroğlu Randevu</string>
+    <string name="package_name">com.drerensagiroglu.randevu</string>
+    <string name="custom_url_scheme">com.drerensagiroglu.randevu</string>
+</resources>
